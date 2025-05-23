@@ -112,13 +112,13 @@
 
 .sidebar {
     width: 220px;
+    z-index: 999;
     background-color: #ffffff;
     border-right: 1px solid #e0e0e0;
     padding: 15px 0;
     overflow-y: auto;
     height: calc(100vh - 70px);
     transition: transform 0.3s ease;
-    z-index: 5;
 }
 
 /* Overlay for mobile */

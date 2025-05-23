@@ -19,7 +19,7 @@ const Terms = () => {
             !error &&
             terms &&
             terms.content
-              .split("\n\n")
+              .split("\n")
               .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
         </div>
         <a href="/" className={styles.closeButton}>
