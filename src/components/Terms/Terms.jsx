@@ -8,24 +8,22 @@ const Terms = () => {
   return (
     <div className={styles.termsContainer}>
       <Navigation />
-      <div className={styles.termsContainerInner}>
-        <a href="/" className={styles.closeButton}>
-          Close and Go Back
-        </a>
-        <div className={styles.termsContent}>
-          {isLoading && <div>Loading...</div>}
-          {error && <div className={styles.error}>Error: {error}</div>}
-          {!isLoading &&
-            !error &&
-            terms &&
-            terms.content
-              .split("\n")
-              .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-        </div>
-        <a href="/" className={styles.closeButton}>
-          Close and Go Back
-        </a>
+      <a href="/" className={styles.closeButton}>
+        Close and Go Back
+      </a>
+      <div className={styles.termsContent}>
+        {isLoading && <div>Loading...</div>}
+        {error && <div className={styles.error}>Error: {error}</div>}
+        {!isLoading &&
+          !error &&
+          terms &&
+          terms.content
+            .split("\n")
+            .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
       </div>
+      <a href="/" className={styles.closeButton}>
+        Close and Go Back
+      </a>
     </div>
   );
 };
