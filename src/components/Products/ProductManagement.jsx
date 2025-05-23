@@ -6,6 +6,8 @@ export default function ProductManagement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
     articleNo: "",
     productName: "",
@@ -43,7 +45,7 @@ export default function ProductManagement() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        const res = await fetch(`http://localhost:3000/products/${id}`, {
+        const res = await fetch(`https://prod-handler.onrender.com/products/${id}`, {
           method: "DELETE",
         });
 
@@ -65,7 +67,7 @@ export default function ProductManagement() {
         inPrice: parseFloat(newProduct.inPrice)
       };
 
-      const res = await fetch("http://localhost:3000/products", {
+      const res = await fetch("https://prod-handler.onrender.com/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,6 +98,54 @@ export default function ProductManagement() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    setNewProduct({
+      articleNo: product.articleNo,
+      productName: product.productName,
+      price: product.price.toString(),
+      inPrice: product.inPrice.toString(),
+      unit: product.unit,
+      description: product.description,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const productData = {
+        ...newProduct,
+        price: parseFloat(newProduct.price),
+        inPrice: parseFloat(newProduct.inPrice)
+      };
+
+      const res = await fetch(`https://prod-handler.onrender.com/products/${editingProduct.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+
+      if (!res.ok) throw new Error("Failed to update product");
+      
+      setIsEditModalOpen(false);
+      setEditingProduct(null);
+      setNewProduct({
+        articleNo: "",
+        productName: "",
+        price: "",
+        inPrice: "",
+        unit: "",
+        description: "",
+      });
+      fetchProducts();
+    } catch (err) {
+      alert("Failed to update product: " + err.message);
+    }
   };
 
   if (error) return <div className={styles.error}>Error: {error}</div>;
@@ -139,6 +189,13 @@ export default function ProductManagement() {
                     <span>{product.description}</span>
                   </div>
                   <div className={styles.actionsCell}>
+                    <button
+                      className={styles.actionButton}
+                      title="Edit"
+                      onClick={() => handleEdit(product)}
+                    >
+                      ✏️
+                    </button>
                     <button
                       className={styles.actionButton}
                       title="Delete"
@@ -248,6 +305,112 @@ export default function ProductManagement() {
                 </button>
                 <button type="submit" className={styles.submitButton}>
                   Add Product
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isEditModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h3>Edit Product</h3>
+              <button
+                className={styles.closeButton}
+                onClick={() => {
+                  setIsEditModalOpen(false);
+                  setEditingProduct(null);
+                }}
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleUpdateProduct} className={styles.modalForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="editArticleNo">Article No.</label>
+                <input
+                  type="text"
+                  id="editArticleNo"
+                  name="articleNo"
+                  value={newProduct.articleNo}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="editProductName">Product Name</label>
+                <input
+                  type="text"
+                  id="editProductName"
+                  name="productName"
+                  value={newProduct.productName}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="editPrice">Selling Price</label>
+                <input
+                  type="number"
+                  id="editPrice"
+                  name="price"
+                  value={newProduct.price}
+                  onChange={handleInputChange}
+                  required
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="editInPrice">Purchase Price</label>
+                <input
+                  type="number"
+                  id="editInPrice"
+                  name="inPrice"
+                  value={newProduct.inPrice}
+                  onChange={handleInputChange}
+                  required
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="editUnit">Unit</label>
+                <input
+                  type="text"
+                  id="editUnit"
+                  name="unit"
+                  value={newProduct.unit}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="e.g., pcs, kg, box"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="editDescription">Description</label>
+                <textarea
+                  id="editDescription"
+                  name="description"
+                  value={newProduct.description}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    setEditingProduct(null);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className={styles.submitButton}>
+                  Update Product
                 </button>
               </div>
             </form>
