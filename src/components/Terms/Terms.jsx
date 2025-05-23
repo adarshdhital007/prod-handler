@@ -9,6 +9,7 @@ const Terms = () => {
     <div className={styles.termsContainer}>
       <div className={styles.backgroundImage}>
         <img
+          className={styles.image}
           src="https://storage.123fakturera.se/public/wallpapers/sverige43.jpg"
           alt="Lett Faktura"
         />

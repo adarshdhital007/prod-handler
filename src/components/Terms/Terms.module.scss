@@ -1,6 +1,5 @@
 .termsContainer {
   margin: 0 auto;
-  padding: 0 1rem 0 0;
   min-height: 100dvh;
   position: relative;
   width: 100%;
@@ -20,6 +19,7 @@
   position: relative;
   flex-direction: column;
   z-index: 999;
+  padding: 0 20px 0 20px;
 }
 
 .termsContent {
@@ -102,19 +102,15 @@
   }
 }
 
-.termsContainerInner {
-  margin: 50px 0;
-
-  @media (max-width: 767px) {
-    margin: 20px 0;
-  }
-}
-
 .backgroundImage {
   position: fixed;
-  z-index: 1;
-  background-size: auto;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  height: 100dvh;
+}
+
+.image {
+  width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transform: translateZ(0px);
 }
