@@ -7,8 +7,7 @@ import {
 import Products from "./components/Products/Products";
 import ProductManagement from "./components/Products/ProductManagement";
 import Terms from "./components/Terms/Terms";
-import { LanguageProvider } from './context/LanguageContext';
-import "./App.css";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   return (
