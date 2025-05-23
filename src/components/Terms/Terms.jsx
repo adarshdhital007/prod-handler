@@ -7,23 +7,31 @@ const Terms = () => {
 
   return (
     <div className={styles.termsContainer}>
-      <Navigation />
-      <a href="/" className={styles.closeButton}>
-        Close and Go Back
-      </a>
-      <div className={styles.termsContent}>
-        {isLoading && <div>Loading...</div>}
-        {error && <div className={styles.error}>Error: {error}</div>}
-        {!isLoading &&
-          !error &&
-          terms &&
-          terms.content
-            .split("\n")
-            .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      <div className={styles.backgroundImage}>
+        <img
+          src="https://storage.123fakturera.se/public/wallpapers/sverige43.jpg"
+          alt="Lett Faktura"
+        />
       </div>
-      <a href="/" className={styles.closeButton}>
-        Close and Go Back
-      </a>
+      <Navigation />
+      <div className={styles.termsContentWrapper}>
+        <a href="/" className={styles.closeButton}>
+          Close and Go Back
+        </a>
+        <div className={styles.termsContent}>
+          {isLoading && <div>Loading...</div>}
+          {error && <div className={styles.error}>Error: {error}</div>}
+          {!isLoading &&
+            !error &&
+            terms &&
+            terms.content
+              .split("\n")
+              .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+        </div>
+        <a href="/" className={styles.closeButton}>
+          Close and Go Back
+        </a>
+      </div>
     </div>
   );
 };
