@@ -6,7 +6,7 @@
   overflow-x: hidden;
   width: 100%;
   background-image: url("https://storage.123fakturera.se/public/wallpapers/sverige43.jpg");
-  background-size: cover;
+  background-size: auto;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -21,6 +21,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3); /* Optional: adds a slight overlay */
     z-index: 0;
+    pointer-events: none;
   }
 }
 
