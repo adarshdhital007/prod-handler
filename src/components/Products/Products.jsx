@@ -12,6 +12,8 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [editingCell, setEditingCell] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
   const itemsPerPage = 10;
 
   // Debounce function to prevent too many API calls
@@ -37,7 +39,9 @@ export default function Products() {
         ...(searchProduct && { searchProduct }),
       });
 
-      const res = await fetch(`https://prod-handler.onrender.com/products?${queryParams}`);
+      const res = await fetch(
+        `https://prod-handler.onrender.com/products?${queryParams}`
+      );
       if (!res.ok) throw new Error("Failed to fetch products");
       const data = await res.json();
 
@@ -93,6 +97,59 @@ export default function Products() {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleCellClick = (productId, field, value) => {
+    setEditingCell({ productId, field });
+    setEditingValue(value);
+  };
+
+  const handleCellChange = (e) => {
+    setEditingValue(e.target.value);
+  };
+
+  const handleCellBlur = async () => {
+    if (!editingCell) return;
+
+    try {
+      const { productId, field } = editingCell;
+      const updatedProducts = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, [field]: editingValue };
+        }
+        return product;
+      });
+      setProducts(updatedProducts);
+
+      const res = await fetch(
+        `https://prod-handler.onrender.com/products/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ [field]: editingValue }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to update product");
+      }
+
+      fetchProducts();
+    } catch (err) {
+      setError("Failed to update product: " + err.message);
+      fetchProducts();
+    } finally {
+      setEditingCell(null);
+      setEditingValue("");
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleCellBlur();
+    }
   };
 
   const renderPagination = () => {
@@ -179,7 +236,6 @@ export default function Products() {
 
   return (
     <div className={styles.appContainer}>
-      {/* Header */}
       <header className={styles.header}>
         <div
           className={`${styles.hamburgerMenu} ${
@@ -349,18 +405,157 @@ export default function Products() {
                 products.map((product) => (
                   <div key={product.id} className={styles.productRow}>
                     <div className={styles.arrowCell}>→</div>
-                    <div className={styles.articleCell}>
-                      {product.articleNo}
+                    <div
+                      className={styles.articleCell}
+                      onClick={() =>
+                        handleCellClick(
+                          product.id,
+                          "articleNo",
+                          product.articleNo
+                        )
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "articleNo" ? (
+                        <input
+                          type="text"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.articleNo
+                      )}
                     </div>
-                    <div className={styles.productCell}>
-                      <span>{product.productName}</span>
+                    <div
+                      className={styles.productCell}
+                      onClick={() =>
+                        handleCellClick(
+                          product.id,
+                          "productName",
+                          product.productName
+                        )
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "productName" ? (
+                        <input
+                          type="text"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.productName
+                      )}
                     </div>
-                    <div className={styles.inPriceCell}>{product.inPrice}</div>
-                    <div className={styles.priceCell}>{product.price}</div>
-                    <div className={styles.unitCell}>{product.unit}</div>
-                    <div className={styles.stockCell}>{product.inStock}</div>
-                    <div className={styles.descriptionCell}>
-                      {product.description}
+                    <div
+                      className={styles.inPriceCell}
+                      onClick={() =>
+                        handleCellClick(product.id, "inPrice", product.inPrice)
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "inPrice" ? (
+                        <input
+                          type="number"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.inPrice
+                      )}
+                    </div>
+                    <div
+                      className={styles.priceCell}
+                      onClick={() =>
+                        handleCellClick(product.id, "price", product.price)
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "price" ? (
+                        <input
+                          type="number"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.price
+                      )}
+                    </div>
+                    <div
+                      className={styles.unitCell}
+                      onClick={() =>
+                        handleCellClick(product.id, "unit", product.unit)
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "unit" ? (
+                        <input
+                          type="text"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.unit
+                      )}
+                    </div>
+                    <div
+                      className={styles.stockCell}
+                      onClick={() =>
+                        handleCellClick(product.id, "inStock", product.inStock)
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "inStock" ? (
+                        <input
+                          type="number"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.inStock
+                      )}
+                    </div>
+                    <div
+                      className={styles.descriptionCell}
+                      onClick={() =>
+                        handleCellClick(
+                          product.id,
+                          "description",
+                          product.description
+                        )
+                      }
+                    >
+                      {editingCell?.productId === product.id &&
+                      editingCell?.field === "description" ? (
+                        <input
+                          type="text"
+                          value={editingValue}
+                          onChange={handleCellChange}
+                          onBlur={handleCellBlur}
+                          onKeyPress={handleKeyPress}
+                          autoFocus
+                        />
+                      ) : (
+                        product.description
+                      )}
                     </div>
                     <div className={styles.actionsCell}>⋯</div>
                   </div>
