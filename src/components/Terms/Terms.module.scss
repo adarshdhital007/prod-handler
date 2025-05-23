@@ -104,7 +104,8 @@
 
 .backgroundImage {
   position: fixed;
-  height: 100dvh;
+  height: 100vh;
+  width: 100%;
 }
 
 .image {
@@ -113,4 +114,7 @@
   object-fit: cover;
   object-position: center center;
   transform: translateZ(0px);
+  backface-visibility: hidden;
+  max-width: 100%;
+  height: auto;
 }
