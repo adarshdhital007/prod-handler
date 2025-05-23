@@ -113,4 +113,8 @@
 .backgroundImage {
   position: fixed;
   z-index: 1;
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
